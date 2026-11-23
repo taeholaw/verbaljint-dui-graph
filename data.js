@@ -56,7 +56,7 @@ window.VJ_DATA=[
    {sum:'반성문이자 스스로에 대한 현실 점검, 다시 한번 반성', ly:'다시 한번 더 반성 reality check 그 약속 후 3년 다시 한번 더 반성'}
   ]},
  {id:'tofr',t:'True Or False Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'3ORNUry34VU',m:[
-   {sum:'맥주 마신 상태를 잊고 운전대를 잡은 그날을 다시 서술', ly:''}
+   {sum:'맥주 마신 상태를 잊고 운전대를 잡은 그날을 다시 서술', ly:'운전대를 잡았네 맥주가 들어간 내 상태를 망각한 채'}
   ]},
  {id:'yoran',t:'요란 (기리보이·비와이·버벌진트, Prod. millic)',a:'쇼미더머니 8 Episode 1',d:'2019.08.24',y:'3FH9rd-v_Uc',m:[
    {sum:'3년 전 35살, 마포, 밤 10시에 울린 사이렌', ly:'복잡해 머리가 3년전 got caught at age 35 장소는 마포'},
