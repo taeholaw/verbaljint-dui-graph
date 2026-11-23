@@ -100,10 +100,10 @@ body.edit .node{cursor:text}
   </div>
 </div></div>
 <div id="toast"></div>
-<script>document.write('<script src="data.js?t='+Date.now()+'"><\/script>')</script>
+<script>window.addEventListener('error',e=>{if(e.filename&&e.filename.indexOf('data.js')>-1){window.VJ_ERR='data.js '+e.lineno+'번째 줄에서 오류가 났습니다. 따옴표나 쉼표를 확인해 주세요.'}},true);document.write('<script src="data.js?t='+Date.now()+'"><\/script>')</script>
 <script>
 {
-const BASE=(window.VJ_DATA||[]);
+const BASE=(window.VJ_DATA||[]);if(window.VJ_ERR||!BASE.length){const m=document.createElement('div');m.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#3b1d2a;border:1px solid #f08aa8;color:#fff;padding:16px 20px;border-radius:10px;font-size:15px;max-width:90%;text-align:center';m.textContent=window.VJ_ERR||'data.js를 읽지 못했습니다.';document.body.appendChild(m)}
 const KEY='vj-dui-lyrics-v1';
 /* user data: {songId:[{sum,ly}]} — ly is the user's own entry */
 let store={};
