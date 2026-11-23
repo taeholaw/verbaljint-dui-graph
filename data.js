@@ -32,20 +32,20 @@ window.VJ_DATA=[
    {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:'누군간 내게 묻네 그 얘긴 대체 계속 왜 음악에 넣냐고 다른 뜻은 없네 IT`S JUST A REMINDER FOR MYSELF'}
   ]},
  {id:'pistol',t:'Pistol Bae (리코, Feat. Verbal Jint, SLEEQ)',a:'Panorama',d:'2017.09.29',y:'kTDQBsRXnic',m:[
-   {sum:'새 차로 고속도로를 달려도 맨정신, 작년의 죄는 다시 없을 일', ly:''}
+   {sum:'새 차로 고속도로를 달려도 맨정신, 작년의 죄는 다시 없을 일', ly:'새로 뽑은 차를 타고 hit the freeway 물론 sober 하네 작년에 저지른 죄 다시는 일어나지 않을 일이네'}
   ]},
  {id:'self',t:'자기암시 (Feat. SUPERBEE)',a:'변명없이 (No Excuses)',d:'2017.10.27',y:'FfK2aIFe9kw',m:[
    {sum:'잘 타지도 않는 그 차를 팔지 않은 건 그때의 잘못을 잊지 않기 위해', ly:'내 Bentley는 차고에 잘 타지도 않지만 팔지도 않았네 you wanna know why'},
    {sum:'지금까지 낸 반성곡들과 같은 맥락이라는 설명', ly:'그때의 나의 잘못을 잊지 않기 위해 내가 끝없이 냈던 반성곡과 같은 맥락'}
   ]},
  {id:'regret',t:'후회해',a:'변명없이 (No Excuses)',d:'2017.10.27',y:'mHo0NApA9s4',m:[
-   {sum:'그때 그 꼴로 운전대를 잡은 게 평생 최악의 잘못', ly:''},
-   {sum:'전과자 꼬리표를 달고 살아야 한다는 걸 안다', ly:''},
-   {sum:'반성의 노래라면 얼마든지 쓸 수 있다', ly:''}
+   {sum:'그때 그 꼴로 운전대를 잡은 게 평생 최악의 잘못', ly:'술 이야기가 나왔으니 말인데 그때 그 꼴로 운전대를 잡은 게 내 평생 최악의 잘못'},
+   {sum:'전과자 꼬리표를 달고 살아야 한다는 걸 안다', ly:'전과자 꼬리표를 달고 살아가야 한다는 거 I know that'},
+   {sum:'반성의 노래라면 얼마든지 쓸 수 있다', ly:'얼마든 쓸 수 있어 반성의 노래 yeah I really hope you know that'}
   ]},
  {id:'heyvj',t:'Hey VJ',a:'Hey VJ',d:'2019.03.12',y:'hY-BOxBSDpQ',m:[
-   {sum:'요즘도 술 마시고 운전하냐는 자문에 "절대 아니다"', ly:''},
-   {sum:'밤 드라이브가 낙이지만 물론 맨정신으로', ly:''}
+   {sum:'요즘도 술 마시고 운전하냐는 자문에 "절대 아니다"', ly:'hey VJ do you drink and drive these days NEVER 내 스스로에게 더 실망하긴 싫어'},
+   {sum:'밤 드라이브가 낙이지만 물론 맨정신으로', ly:'야간에 drive 하기 물론 sober 해야지'}
   ]},
  {id:'jan',t:'1월의 업무보고',a:'이것은 음악인가 업무보고서인가',d:'2019.05.03',y:'IF8CBPaebTs',m:[
    {sum:'2018년 12월 24일, 음주 차량이 세워둔 내 G-Wagen을 들이받았다', ly:''},
