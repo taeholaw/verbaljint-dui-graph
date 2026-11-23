@@ -25,7 +25,7 @@ window.VJ_DATA=[
    {sum:'지난 몇 년을 반성하며 돌아봤다는 고백', ly:'지난 몇 년을 반성하고 돌아보았다 that`s all'},
   ]},
  {id:'iwk',t:'그것이알고싶다 (Feat. Car, the garden)',a:'그것이알고싶다',d:'2017.01.10',y:'KQHUWurCQbo',m:[
-   {sum:'다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유', ly:''}
+   {sum:'다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유', ly:'내가 다신 음주운전 안 하는 것처럼 사람은 바뀌는 거니까'}
   ]},
  {id:'award',t:'상을 받아야 돼 (한해·HENNEY, Feat. 버벌진트)',a:'LIPSTICK ON MY 여기저기',d:'2017.03.01',y:'RxP01H5qje4',m:[
    {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF`EM REGULAR FOUR OF`EM EP`S ONE OF`EM CRIMINAL 반성하네 오늘 밤도'},
