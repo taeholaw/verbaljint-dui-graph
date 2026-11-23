@@ -28,7 +28,7 @@ window.VJ_DATA=[
    {sum:'다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유', ly:''}
   ]},
  {id:'award',t:'상을 받아야 돼 (한해·HENNEY, Feat. 버벌진트)',a:'LIPSTICK ON MY 여기저기',d:'2017.03.01',y:'RxP01H5qje4',m:[
-   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF'EM REGULAR FOUR OF`EM EP`S ONE OF`EM CRIMINAL 반성하네 오늘 밤도'},
+   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF`EM REGULAR FOUR OF`EM EP`S ONE OF`EM CRIMINAL 반성하네 오늘 밤도'},
    {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:'누군간 내게 묻네 그 얘긴 대체 계속 왜 음악에 넣냐고 다른 뜻은 없네 IT`S JUST A REMINDER FOR MYSELF'}
   ]},
  {id:'pistol',t:'Pistol Bae (리코, Feat. Verbal Jint, SLEEQ)',a:'Panorama',d:'2017.09.29',y:'kTDQBsRXnic',m:[
