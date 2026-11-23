@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>버벌진트 음주운전 글자벽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 고백과 반성이 10년 동안 쌓인 벽, 무겁고 빽빽하게
+   IDEA: 폴라 셰어의 타이포그래피 지도처럼 화면 전체를 언급 대목으로 칠한 벽화
+   PICTURE: 가장자리까지 꽉 찬 글자 덩어리, 곡 제목이 굵은 이정표로 박혀 있음
+   COLOUR and TYPE: 아스팔트 검정 #0e0e10 위에 단속등 빨강 #ff3b30과 경광등 파랑 #3d8bff 사이의 연도별 색, Noto Sans KR 300/500/900
+   LAYOUT: 벽이 화면 전체, 하단에 얇은 띠 하나(제목·안내·그래프 보기 링크) */
+:root{color-scheme:dark;--bg:#0e0e10;--ink:#e9e9ee;--dim:#8b8b96}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden}
+#wall{position:fixed;left:0;right:0;top:0;bottom:44px;padding:10px 12px 4px;overflow:hidden;text-align:justify;text-align-last:left;word-break:keep-all;line-height:1.02;letter-spacing:-.02em}
+#wall.scroll{overflow-y:auto;text-align-last:auto}
+#wall a{color:inherit;text-decoration:none;transition:opacity .25s,color .25s}
+.ti{font-weight:900;text-transform:uppercase;letter-spacing:-.04em}
+.m{font-weight:300}
+.m.b{font-weight:500}
+.m.ly{font-weight:500}
+.sep{opacity:.35;font-weight:300}
+#wall.dim a{opacity:.16}
+#wall.dim a.on{opacity:1;color:#fff}
+#wall.dim a.sib{opacity:.6}
+#bar{position:fixed;left:0;right:0;bottom:0;height:44px;display:flex;align-items:center;gap:14px;padding:0 14px;background:#0e0e10;border-top:1px solid #26262c;font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden}
+#bar b{color:#fff;font-weight:500}
+#bar a{color:#fff;text-decoration:none;border:1px solid #33333b;border-radius:7px;padding:5px 10px}
+#bar a:focus-visible,#wall a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#bar .sp{flex:1}
+#card{position:fixed;left:50%;bottom:64px;transform:translate(-50%,8px);width:min(760px,calc(100% - 24px));background:#141418ee;border:1px solid #2c2c34;border-radius:14px;padding:18px 22px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 20px 60px #000a}
+#card.show{opacity:1;transform:translate(-50%,0)}
+#card .q{font-size:clamp(20px,3.2vw,34px);font-weight:500;line-height:1.3;color:#fff;white-space:pre-line}
+#card .s{margin-top:10px;font-size:15px;color:var(--c,#ff3b30)}
+#err{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#3b1d2a;border:1px solid #f08aa8;color:#fff;padding:16px 20px;border-radius:10px;display:none;max-width:90%;text-align:center}
+@media(max-width:700px){#bar .hint{display:none}#card{bottom:56px;padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){#wall a,#card{transition:none}}
+</style>
+<script>window.addEventListener('error',e=>{if(e.filename&&e.filename.indexOf('data.js')>-1){window.VJ_ERR='data.js '+e.lineno+'번째 줄에서 오류가 났습니다. 따옴표나 쉼표를 확인해 주세요.'}},true);document.write('<script src="data.js?t='+Date.now()+'"><\/script>')</script>
+</head>
+<body>
+<main id="wall" aria-label="버벌진트가 음주운전을 언급한 대목을 발매 순서대로 채운 글자벽"></main>
+<div id="card" aria-live="polite"><div class="q" id="cq"></div><div class="s" id="cs"></div></div>
+<div id="bar"><b>버벌진트, 음주운전을 말한 가사들 2016–2026</b><span class="hint">글자에 마우스를 올리면 커지고, 클릭하면 유튜브로 이동합니다</span><span class="sp"></span><a href="./">그래프 보기</a></div>
+<div id="err"></div>
+<script>
+{
+const D=(window.VJ_DATA||[]).slice().sort((p,q)=>p.d.localeCompare(q.d));
+const wall=document.getElementById('wall'),card=document.getElementById('card'),cq=document.getElementById('cq'),cs=document.getElementById('cs');
+if(window.VJ_ERR||!D.length){const e=document.getElementById('err');e.textContent=window.VJ_ERR||'data.js를 읽지 못했습니다.';e.style.display='block'}
+const years=[...new Set(D.map(s=>s.d.slice(0,4)))].sort();
+/* 단속등 빨강 → 경광등 파랑, 연도 순 */
+const ramp=['#ff3b30','#ff6a2b','#ff9f1c','#ffd23f','#e9e9ee','#b8f2e6','#7ad3ff','#5aa9ff','#3d8bff'];
+const col=y=>ramp[Math.round(years.indexOf(y)/Math.max(1,years.length-1)*(ramp.length-1))];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=x=>typeof x==='string'?{sum:x,ly:''}:{sum:x.sum||'',ly:x.ly||''};
+let html='',k=0;
+D.forEach((s,si)=>{
+ const c=col(s.d.slice(0,4)),url='https://www.youtube.com/watch?v='+s.y,name=s.t.split(' (')[0],big=1+Math.min(s.m.length,5)*0.12;
+ html+=`<a class="ti" data-s="${si}" href="${url}" target="_blank" rel="noopener" style="color:${c};font-size:${(1.9*big).toFixed(2)}em">${esc(name)}</a> `;
+ s.m.map(norm).forEach((it,j)=>{
+  const txt=(it.ly&&it.ly.trim())?it.ly.trim():it.sum,isLy=!!(it.ly&&it.ly.trim());
+  const size=[1,1.35,0.9,1.6,1.1][(k++)%5]*(isLy?1.1:1);
+  html+=`<a class="m${k%3===0?' b':''}${isLy?' ly':''}" data-s="${si}" data-j="${j}" href="${url}" target="_blank" rel="noopener" style="font-size:${size.toFixed(2)}em;color:${j%2?c:'var(--ink)'}">${esc(txt.replace(/\n+/g,' / '))}</a><span class="sep"> · </span>`;
+ });
+});
+wall.innerHTML=html;
+/* fit: largest base size where the wall still fits the screen */
+function fit(){wall.classList.remove('scroll');let lo=4,hi=80;for(let i=0;i<18;i++){const mid=(lo+hi)/2;wall.style.fontSize=mid+'px';if(wall.scrollHeight<=wall.clientHeight)lo=mid;else hi=mid}
+ const min=innerWidth<700?9:7;if(lo<min){wall.style.fontSize=min+'px';wall.classList.add('scroll')}else wall.style.fontSize=lo+'px'}
+/* hover card */
+let cur=null,lastType='mouse';
+function show(a){const s=D[+a.dataset.s];if(!s)return;cur=a;wall.classList.add('dim');wall.querySelectorAll('a.on,a.sib').forEach(x=>x.classList.remove('on','sib'));a.classList.add('on');wall.querySelectorAll(`a[data-s="${a.dataset.s}"]`).forEach(x=>{if(x!==a)x.classList.add('sib')});
+ if(a.classList.contains('ti')){cq.textContent=s.t;cs.textContent=`『${s.a}』, ${s.d} · 대목 ${s.m.length}개`}
+ else{const it=norm(s.m[+a.dataset.j]);cq.textContent=(it.ly&&it.ly.trim())?it.ly.trim():it.sum;cs.textContent=`- ${s.t} (『${s.a}』), ${s.d}`}
+ card.style.setProperty('--c',col(s.d.slice(0,4)));card.classList.add('show')}
+function hide(){cur=null;wall.classList.remove('dim');wall.querySelectorAll('a.on,a.sib').forEach(x=>x.classList.remove('on','sib'));card.classList.remove('show')}
+wall.addEventListener('pointerover',e=>{lastType=e.pointerType;const a=e.target.closest('a');if(a&&e.pointerType==='mouse')show(a)});
+wall.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hide()});
+wall.addEventListener('pointerdown',e=>{lastType=e.pointerType});
+wall.addEventListener('click',e=>{const a=e.target.closest('a');if(!a){hide();return}if(lastType!=='mouse'&&cur!==a){e.preventDefault();show(a)}});
+wall.addEventListener('focusin',e=>{const a=e.target.closest('a');if(a)show(a)});
+wall.addEventListener('focusout',()=>hide());
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hide()});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(fit,120)});
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fit,fit);fit();
+}
+</script>
+</body>
+</html>
