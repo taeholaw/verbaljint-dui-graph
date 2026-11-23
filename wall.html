@@ -16,13 +16,11 @@
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden}
-#wall{position:fixed;left:0;right:0;top:0;bottom:44px;padding:2px 10px 0;overflow:hidden;color:var(--ink);letter-spacing:-.02em}
-.ln{white-space:nowrap;width:max-content;max-width:none}
+#wall{position:fixed;left:0;right:0;top:0;bottom:44px;padding:2px 10px 0;overflow:hidden;text-align:justify;text-align-last:left;letter-spacing:-.02em;font-weight:500}
 #wall.scroll{overflow-y:auto;text-align-last:auto}
 #wall [role=button]{color:inherit;text-decoration:none;transition:opacity .25s,color .25s}
 .ti{font-weight:900;text-transform:uppercase;letter-spacing:-.04em}
-.m{color:#ececf0}
-.ln.w3 .m{font-weight:300}.ln.w5 .m{font-weight:500}.ln.w9 .m{font-weight:900}.ln .ti{font-weight:900}.w3{font-weight:300}.w5{font-weight:500}.w9{font-weight:900}
+#wall{word-break:break-all}#wall .m.w{color:#f2f2f5}#wall .m.g{color:#80808a}.w3{font-weight:300}.w5{font-weight:500}.w9{font-weight:900}
 .sep{color:#55555e;font-weight:300}
 #wall.dim [role=button]{opacity:.16}
 #wall.dim .on{opacity:1;color:#fff}
@@ -61,28 +59,21 @@ const ramp=['#ff3b30','#ff6a2b','#ff9f1c','#ffd23f','#e9e9ee','#b8f2e6','#7ad3ff
 const col=y=>ramp[Math.round(years.indexOf(y)/Math.max(1,years.length-1)*(ramp.length-1))];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const norm=x=>typeof x==='string'?{sum:x,ly:''}:{sum:x.sum||'',ly:x.ly||''};
-/* Each line is sized so it spans the full width; line lengths vary at random,
-   so type sizes vary too. The average length is tuned until the lines exactly fill the screen. */
-const units=[];let si=0;
-D.forEach((s,i)=>{const c=col(s.d.slice(0,4));units.push({t:s.t.split(' (')[0],ti:1,s:i,c});
- s.m.map(norm).forEach((it,j)=>{const txt=((it.ly&&it.ly.trim())?it.ly.trim():it.sum).replace(/\n+/g,' / ');
-  txt.split(/\s+/).filter(Boolean).forEach((w,k,arr)=>units.push({t:w,s:i,j,last:k===arr.length-1}))})});
-const wt=['w3','w5','w9'];
-function lines(avg){let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
- const out=[];let cur=[],len=0,target=avg*(0.35+rnd()*1.5);
- units.forEach(u=>{cur.push(u);len+=u.t.length+1;if(len>=target){out.push({u:cur,w:wt[Math.floor(rnd()*3)]});cur=[];len=0;target=avg*(0.35+rnd()*1.5)}});
- if(cur.length){if(out.length&&len<avg*0.4){out[out.length-1].u.push(...cur)}else out.push({u:cur,w:wt[Math.floor(rnd()*3)]})}
- return out}
-function render(ls){return ls.map(l=>{let h='',prev=null;l.u.forEach((u,i)=>{const key=u.ti?'t'+u.s:u.s+'-'+u.j;
-  if(prev&&prev!==key){h+='</span>'+(u.ti||l.u[i-1].ti?' ':'<span class="sep"> / </span>')}else if(prev)h+=' ';
-  if(prev!==key)h+=u.ti?`<span class="ti" data-s="${u.s}" tabindex="0" role="button" style="color:${u.c}">`:`<span class="m" data-s="${u.s}" data-j="${u.j}" tabindex="0" role="button">`;
-  h+=esc(u.t);prev=key});return `<div class="ln ${l.w}">${h}</span></div>`}).join('')}
-function size(){const W=wall.clientWidth-20;let tot=0;wall.querySelectorAll('.ln').forEach(d=>{d.style.fontSize='100px';const w=d.scrollWidth||1;const f=Math.min(100*W/w,wall.clientHeight*0.28);d.style.fontSize=f+'px';tot+=f});return tot}
-function fit(){wall.classList.remove('scroll');const H=wall.clientHeight-4,LH=1.0;let lo=4,hi=400,best=null;
- for(let i=0;i<22;i++){const mid=(lo+hi)/2;wall.innerHTML=render(lines(mid));const t=size()*LH;if(t<=H){hi=mid;best=mid}else lo=mid}
- if(best===null){best=hi;}wall.innerHTML=render(lines(best));const tot=size();
- const lh=Math.max(0.95,Math.min(1.4,H/tot));wall.style.lineHeight=lh;
- const minFs=Math.min(...[...wall.querySelectorAll('.ln')].map(d=>parseFloat(d.style.fontSize)));if(tot*lh>H+2||minFs<5)wall.classList.add('scroll')}
+/* One type size for everything. Within a song, consecutive passages alternate white / grey. */
+let html='';
+D.forEach((s,i)=>{const c=col(s.d.slice(0,4));
+ html+=`<span class="ti" data-s="${i}" tabindex="0" role="button" style="color:${c}">${esc(s.t.split(' (')[0])}</span> `;
+ s.m.map(norm).forEach((it,j)=>{const txt=((it.ly&&it.ly.trim())?it.ly.trim():it.sum).replace(/\n+/g,' ');
+  html+=`<span class="m ${j%2?'g':'w'}" data-s="${i}" data-j="${j}" tabindex="0" role="button">${esc(txt)}</span> `})});
+wall.innerHTML=html;
+function lastFill(){const r=document.createRange();r.selectNodeContents(wall);const rs=[...r.getClientRects()].filter(x=>x.width>0);if(!rs.length)return 1;const b=Math.max(...rs.map(x=>x.bottom));const line=rs.filter(x=>x.bottom>b-3);const wr=wall.getBoundingClientRect();return (Math.max(...line.map(x=>x.right))-Math.min(...line.map(x=>x.left)))/(wr.width-20)}
+function fit(){wall.classList.remove('scroll');wall.style.lineHeight='1.05';const H=wall.clientHeight;
+ let lo=4,hi=120;for(let i=0;i<20;i++){const m=(lo+hi)/2;wall.style.fontSize=m+'px';if(wall.scrollHeight<=H)lo=m;else hi=m}
+ if(lo<7){wall.style.fontSize='7px';wall.classList.add('scroll');return}
+ /* among sizes just under the maximum, take the one whose last line runs furthest to the right */
+ let best=lo,bf=-1;for(let f=lo;f>lo*0.88;f-=lo*0.002){wall.style.fontSize=f+'px';if(wall.scrollHeight>H)continue;const q=lastFill();if(q>bf){bf=q;best=f}if(q>0.97)break}
+ wall.style.fontSize=best+'px';
+ let a=1.05,b=1.6;for(let i=0;i<16;i++){const m=(a+b)/2;wall.style.lineHeight=m;if(wall.scrollHeight<=H)a=m;else b=m}wall.style.lineHeight=a}
 /* detail card: hover or click shows it; the card itself is the YouTube link */
 let cur=null,pinned=false,ht=0;const W=x=>x.closest&&x.closest('#wall [role=button]');
 function show(a){clearTimeout(ht);const s=D[+a.dataset.s];if(!s)return;cur=a;wall.classList.add('dim');wall.querySelectorAll('.on,.sib').forEach(x=>x.classList.remove('on','sib'));const same=a.classList.contains('ti')?`.ti[data-s="${a.dataset.s}"]`:`.m[data-s="${a.dataset.s}"][data-j="${a.dataset.j}"]`;wall.querySelectorAll(`[data-s="${a.dataset.s}"]`).forEach(x=>x.classList.add('sib'));wall.querySelectorAll(same).forEach(x=>{x.classList.remove('sib');x.classList.add('on')});
