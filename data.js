@@ -70,11 +70,11 @@ window.VJ_DATA=[
    {sum:'몇 년 전 음주로 추적 60분에 나오고도 자숙 없이 나왔다는 세간의 말', ly:''}
   ]},
  {id:'ahop',t:'아홉수',a:'변곡점',d:'2021.04.06',y:'4RVfsrGJSTY',m:[
-   {sum:'카메라가 쫓아오듯 전부 방송된 DUI 사건', ly:''}
+   {sum:'카메라가 쫓아오듯 전부 방송된 DUI 사건', ly:'on TV i shed tears and DUI 사건 everything on air like the cameras chasin me'}
   ]},
  {id:'open',t:'Open Letter (feat. 화영)',a:'변곡점',d:'2021.04.06',y:'eStBn9mpJr8',m:[
-   {sum:'술은 많이 마셨어도 DUI는 다시 안 한다', ly:''},
-   {sum:'자신과의 그 약속을 아직 잘 지키고 있다', ly:''}
+   {sum:'술은 많이 마셨어도 DUI는 다시 안 한다', ly:'술을 많이 마시긴 했네 나라 잃은 듯 but DUI 다시는 안 해 '},
+   {sum:'자신과의 그 약속을 아직 잘 지키고 있다', ly:'내 자신과의 약속 아직은 잘 지키고 있네'}
   ]},
  {id:'gwagen',t:'My G-Wagen (feat. 수퍼비)',a:'변곡점',d:'2021.04.06',y:'sCVuUJXXUEQ',m:[
    {sum:'교육을 받은 뒤 인스타에 썼듯 다시는 안 한다', ly:'교육 후 never again gram에 썼듯이 no'}
