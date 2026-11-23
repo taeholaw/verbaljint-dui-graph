@@ -48,8 +48,8 @@ window.VJ_DATA=[
    {sum:'밤 드라이브가 낙이지만 물론 맨정신으로', ly:'야간에 drive 하기 물론 sober 해야지'}
   ]},
  {id:'jan',t:'1월의 업무보고',a:'이것은 음악인가 업무보고서인가',d:'2019.05.03',y:'IF8CBPaebTs',m:[
-   {sum:'2018년 12월 24일, 음주 차량이 세워둔 내 G-Wagen을 들이받았다', ly:''},
-   {sum:'그 운전자와 나는 같은 죄, 다른 건 피해자의 유무뿐이라는 성찰', ly:''}
+   {sum:'2018년 12월 24일, 음주 차량이 세워둔 내 G-Wagen을 들이받았다', ly:'18년 12월 24일 술 먹고 운전대를 잡은 채 골목길 집과 집 사일 누비던 어느 누군간'},
+   {sum:'그 운전자와 나는 같은 죄, 다른 건 피해자의 유무뿐이라는 성찰', ly:'그 차주는 대략 3년 전 같은 죄를 저지른 자 아마 유일하게 다른 점 피해자의 유무쯤일까'}
   ]},
  {id:'chaser',t:'The Chase Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'g57ayuJqonc',m:[
    {sum:'모든 음주운전자는 잠재적 가해자, 다시 한번 되새김', ly:''},
@@ -59,13 +59,12 @@ window.VJ_DATA=[
    {sum:'맥주 마신 상태를 잊고 운전대를 잡은 그날을 다시 서술', ly:''}
   ]},
  {id:'yoran',t:'요란 (기리보이·비와이·버벌진트, Prod. millic)',a:'쇼미더머니 8 Episode 1',d:'2019.08.24',y:'3FH9rd-v_Uc',m:[
-   {sum:'3년 전 35살, 마포, 밤 10시에 울린 사이렌', ly:''},
-   {sum:'죄목은 DUI, 부끄러운 그때의 내 모습', ly:''},
-   {sum:'다시 TV 앞에 선 아이러니', ly:''}
+   {sum:'3년 전 35살, 마포, 밤 10시에 울린 사이렌', ly:'복잡해 머리가 3년전 got caught at age 35 장소는 마포'},
+   {sum:'죄목은 DUI, 부끄러운 그때의 내 모습', ly:'죄목은 DUI 내모습 ugly 그 때의 나 부끄러워'},
+   {sum:'다시 TV 앞에 선 아이러니', ly:'TV앞에 다시 서다니 what an irony ironic해 늘 가사에서 karma 얘기'}
   ]},
  {id:'v2020',t:'2020 VISION (feat. 영비)',a:'2020 VISION',d:'2020.01.03',y:'vNNPvS7nvCQ',m:[
-   {sum:'다시는 술 마시고 운전하지 않는다', ly:''},
-   {sum:'같은 잘못을 반복하며 사는 건 죽어도 싫다', ly:''}
+   {sum:'다시는 술 마시고 운전하지 않는다', ly:'TMI i never drink and drive again'}
   ]},
  {id:'gongin',t:'공인 (feat. 스윙스 & 한요한)',a:'변곡점',d:'2021.04.06',y:'35nOTibr4vM',m:[
    {sum:'몇 년 전 음주로 추적 60분에 나오고도 자숙 없이 나왔다는 세간의 말', ly:''}
@@ -78,7 +77,7 @@ window.VJ_DATA=[
    {sum:'자신과의 그 약속을 아직 잘 지키고 있다', ly:''}
   ]},
  {id:'gwagen',t:'My G-Wagen (feat. 수퍼비)',a:'변곡점',d:'2021.04.06',y:'sCVuUJXXUEQ',m:[
-   {sum:'교육을 받은 뒤 인스타에 썼듯 다시는 안 한다', ly:''}
+   {sum:'교육을 받은 뒤 인스타에 썼듯 다시는 안 한다', ly:'교육 후 never again gram에 썼듯이 no'}
   ]},
  {id:'bts',t:'BTS (무대 뒤)',a:'BTS',d:'2024.12.10',y:'HHNgdVaMSFg',m:[
    {sum:'술 때문에 망가질 뻔한 적이 몇 번 있었다', ly:'I am probably drunk, 술로 인해서 망가질 뻔 했던 적이 몇 번'},
