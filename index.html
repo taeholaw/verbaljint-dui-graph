@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>버벌진트 음주운전 언급 그래프</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 조용하고 기록적인 톤, 노트 앱의 밤 화면
+   IDEA: 옵시디언 그래프 뷰 — 곡은 노드, 언급 대목은 그 노드에 매달린 메모, 발매 순서대로 왼쪽→오른쪽
+   PICTURE: 화면 전체를 채우는 그래프, 점선으로 이어진 곡의 시간 사슬
+   COLOUR and TYPE: 먹색 #1b1b1f, 회색 선, 연도별 점 색, 강조는 보라 #a78bfa 하나, IBM Plex Sans KR
+   LAYOUT: 좌상단 제목, 전부 그래프, 하단 좌측 도구, 하단 우측 연도 범례 */
+:root{color-scheme:dark;--bg:#1b1b1f;--ink:#d9d9de;--dim:#8a8a94;--line:#3a3a42;--accent:#a78bfa;--card:#26262d}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans KR",system-ui,sans-serif;overflow:hidden}
+#g{position:fixed;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;user-select:none}
+#g.drag{cursor:grabbing}
+header{position:fixed;left:18px;top:14px;max-width:min(560px,calc(100% - 36px));pointer-events:none}
+h1{font-size:19px;font-weight:600;margin:0 0 4px;line-height:1.25;color:#ececf1}
+header p{margin:0;font-size:12.5px;color:var(--dim)}
+.legend{position:fixed;right:16px;bottom:16px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;font-size:12px;color:var(--dim);pointer-events:none;max-width:45%}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.tools{position:fixed;left:18px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap;max-width:55%}
+button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;min-height:36px;padding:0 12px;font:inherit;font-size:13px;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{border-color:var(--accent);color:#fff;background:#352d52}
+.link{stroke:var(--line);stroke-width:1}
+.link.chain{stroke-dasharray:2 4;stroke:#34343c}
+.song text{font-size:12px;fill:#c3c3cc;font-weight:500}
+.ment text.t{font-size:10px;fill:var(--dim)}
+.ment.lyric text.t{fill:#c9c9d2}
+.ment .sub{opacity:0;font-size:12.5px;fill:var(--accent)}
+.node{transition:opacity .2s}
+svg.focus .node,svg.focus .link{opacity:.12}
+svg.focus .node.on,svg.focus .link.on{opacity:1}
+.ment.hot text.t{font-size:18px;fill:#f4f4f8;font-weight:500}
+.ment.hot .sub{opacity:1}
+.ment .bg{fill:#1b1b1f;opacity:0}
+.ment.hot .bg{opacity:.94}
+.song.hot text{fill:var(--accent)}
+body.edit .node{cursor:text}
+#panel{position:fixed;right:16px;top:16px;width:min(380px,calc(100% - 32px));background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:none;box-shadow:0 12px 40px #0008}
+#panel.open{display:block}
+#panel h2{font-size:14px;margin:0 0 2px;color:#fff;font-weight:600}
+#panel .meta{font-size:12.5px;color:var(--dim);margin:0 0 10px}
+#panel label{font-size:12.5px;color:var(--dim);display:block;margin:8px 0 4px}
+#panel textarea{width:100%;min-height:76px;background:#1b1b1f;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;font-size:16px;resize:vertical}
+#panel .sum{font-size:12.5px;color:var(--dim);background:#1f1f25;border-radius:8px;padding:6px 10px;margin:0}
+#panel .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#panel .row .grow{flex:1}
+#io{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px}
+#io.open{display:flex}
+#io .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(640px,100%)}
+#io textarea{width:100%;height:240px;background:#1b1b1f;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:13px/1.5 ui-monospace,monospace}
+#io p{font-size:13px;color:var(--dim);margin:0 0 8px}
+#toast{position:fixed;left:50%;bottom:64px;transform:translateX(-50%);background:#352d52;color:#fff;border-radius:8px;padding:6px 14px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){.node{transition:none}}
+@media(max-width:700px){h1{font-size:16px}.legend{display:none}.tools{max-width:calc(100% - 36px)}}
+</style>
+</head>
+<body>
+<svg id="g" role="img" aria-label="버벌진트가 음주운전을 언급한 가사 대목을 발매 순서대로 묶은 그래프"><g id="vp"><g id="links"></g><g id="nodes"></g></g></svg>
+<header>
+  <h1>버벌진트, 음주운전을 말한 가사들 2016–2026</h1>
+  <p id="meta"></p>
+  <p>왼쪽에서 오른쪽으로 발매 순서입니다. 대목에 마우스를 올리면 커지고, 클릭하면 유튜브로 이동합니다.</p>
+</header>
+<div class="tools">
+  <button id="editBtn" type="button" aria-pressed="false">가사 입력 모드</button>
+  <button id="fit" type="button">전체 보기</button>
+  <button id="ioBtn" type="button">내보내기·가져오기</button>
+</div>
+<div class="legend" id="legend"></div>
+<div id="panel" role="dialog" aria-label="가사 입력">
+  <h2 id="pTitle"></h2>
+  <p class="meta" id="pMeta"></p>
+  <div id="pMent">
+    <label>조사 메모(요지)</label>
+    <p class="sum" id="pSum"></p>
+    <label for="pText">해당 가사 (1~2줄, 줄바꿈 가능)</label>
+    <textarea id="pText" placeholder="이 대목의 가사를 입력하세요"></textarea>
+  </div>
+  <div class="row">
+    <button id="pSave" type="button">저장</button>
+    <button id="pAdd" type="button">이 곡에 대목 추가</button>
+    <button id="pDel" type="button">대목 삭제</button>
+    <span class="grow"></span>
+    <button id="pClose" type="button">닫기</button>
+  </div>
+</div>
+<div id="io"><div class="box">
+  <p>입력한 가사는 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 아래 내용을 복사해 두었다가, 그 기기에서 붙여넣고 가져오기를 누르세요.</p>
+  <textarea id="ioText" spellcheck="false"></textarea>
+  <div class="row" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+    <button id="ioCopy" type="button">복사</button><button id="ioLoad" type="button">가져오기</button><button id="ioReset" type="button">입력 내용 초기화</button><span style="flex:1"></span><button id="ioClose" type="button">닫기</button>
+  </div>
+</div></div>
+<div id="toast"></div>
+<script>
+{
+const BASE=[
+ {id:'chase',t:'추적 (The Chase)',a:'추적 (The Chase) / 진실게임 (True or False)',d:'2016.07.29',y:'8TufDiAOADI',m:['6월 그날 밤 사건을 반성하고 있으니 걱정 말라는 다짐','단속 장면이 TV에 그대로 남았다는 고백','모든 음주운전자는 잠재적 가해자라는 자기 인식','이제는 음주운전에 단호히 "노"라고 말한다는 선언','이 곡 자체가 반성문이라는 규정']},
+ {id:'tof',t:'진실게임 (True or False)',a:'추적 (The Chase) / 진실게임 (True or False)',d:'2016.07.29',y:'8X2ER6R351c',m:['맥주 마신 상태를 잊고 운전대를 잡았다는 경위','단속 불빛을 보고 당황해 차를 돌렸다는 장면','술로 생기는 일을 조심하라던 경고를 되새김','지난 몇 년을 반성하며 돌아봤다는 고백','2005년 처음 운전면허를 딴 날의 회상']},
+ {id:'iwk',t:'그것이알고싶다 (Feat. Car, the garden)',a:'그것이알고싶다',d:'2017.01.10',y:'KQHUWurCQbo',m:['다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유']},
+ {id:'award',t:'상을 받아야 돼 (한해·HENNEY, Feat. 버벌진트)',a:'LIPSTICK ON MY 여기저기',d:'2017.03.01',y:'RxP01H5qje4',m:['내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다','그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"']},
+ {id:'pistol',t:'Pistol Bae (리코, Feat. Verbal Jint, SLEEQ)',a:'Panorama',d:'2017.09.29',y:'kTDQBsRXnic',m:['새 차로 고속도로를 달려도 맨정신, 작년의 죄는 다시 없을 일']},
+ {id:'self',t:'자기암시 (Feat. SUPERBEE)',a:'변명없이 (No Excuses)',d:'2017.10.27',y:'FfK2aIFe9kw',m:['잘 타지도 않는 그 차를 팔지 않은 건 그때의 잘못을 잊지 않기 위해','지금까지 낸 반성곡들과 같은 맥락이라는 설명']},
+ {id:'regret',t:'후회해',a:'변명없이 (No Excuses)',d:'2017.10.27',y:'mHo0NApA9s4',m:['그때 그 꼴로 운전대를 잡은 게 평생 최악의 잘못','전과자 꼬리표를 달고 살아야 한다는 걸 안다','반성의 노래라면 얼마든지 쓸 수 있다']},
+ {id:'heyvj',t:'Hey VJ',a:'Hey VJ',d:'2019.03.12',y:'hY-BOxBSDpQ',m:['요즘도 술 마시고 운전하냐는 자문에 "절대 아니다"','밤 드라이브가 낙이지만 물론 맨정신으로']},
+ {id:'jan',t:'1월의 업무보고',a:'이것은 음악인가 업무보고서인가',d:'2019.05.03',y:'IF8CBPaebTs',m:['2018년 12월 24일, 음주 차량이 세워둔 내 G-Wagen을 들이받았다','그 운전자와 나는 같은 죄, 다른 건 피해자의 유무뿐이라는 성찰']},
+ {id:'chaser',t:'The Chase Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'g57ayuJqonc',m:['모든 음주운전자는 잠재적 가해자, 다시 한번 되새김','반성문이자 스스로에 대한 현실 점검, 다시 한번 반성']},
+ {id:'tofr',t:'True Or False Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'3ORNUry34VU',m:['맥주 마신 상태를 잊고 운전대를 잡은 그날을 다시 서술']},
+ {id:'yoran',t:'요란 (기리보이·비와이·버벌진트, Prod. millic)',a:'쇼미더머니 8 Episode 1',d:'2019.08.24',y:'3FH9rd-v_Uc',m:['3년 전 35살, 마포, 밤 10시에 울린 사이렌','죄목은 DUI, 부끄러운 그때의 내 모습','다시 TV 앞에 선 아이러니']},
+ {id:'v2020',t:'2020 VISION (feat. 영비)',a:'2020 VISION',d:'2020.01.03',y:'vNNPvS7nvCQ',m:['다시는 술 마시고 운전하지 않는다','같은 잘못을 반복하며 사는 건 죽어도 싫다']},
+ {id:'gongin',t:'공인 (feat. 스윙스 & 한요한)',a:'변곡점',d:'2021.04.06',y:'35nOTibr4vM',m:['몇 년 전 음주로 추적 60분에 나오고도 자숙 없이 나왔다는 세간의 말']},
+ {id:'ahop',t:'아홉수',a:'변곡점',d:'2021.04.06',y:'4RVfsrGJSTY',m:['카메라가 쫓아오듯 전부 방송된 DUI 사건']},
+ {id:'open',t:'Open Letter (feat. 화영)',a:'변곡점',d:'2021.04.06',y:'eStBn9mpJr8',m:['술은 많이 마셨어도 DUI는 다시 안 한다','자신과의 그 약속을 아직 잘 지키고 있다']},
+ {id:'gwagen',t:'My G-Wagen (feat. 수퍼비)',a:'변곡점',d:'2021.04.06',y:'sCVuUJXXUEQ',m:['교육을 받은 뒤 인스타에 썼듯 다시는 안 한다']},
+ {id:'bts',t:'BTS (무대 뒤)',a:'BTS',d:'2024.12.10',y:'HHNgdVaMSFg',m:['술 때문에 망가질 뻔한 적이 몇 번 있었다','내 이름엔 오점이 있다, 이제는 선을 넘지 않는다']},
+ {id:'money',t:'머니랩 (Feat. BewhY)',a:'HAPPY END',d:'2025.01.18',y:'pDOD_XgdXfI',m:['대리비는 아깝지 않다, 그 짓은 그때로 끝','다시 보고 싶지 않은 그때의 내 모습']},
+ {id:'gajung',t:'가정법 (feat. 그냥노창, B-Free & 율음)',a:'가정법',d:'2026.10.22',y:'b0UiZpYyY4s',m:['그때 운전대를 잡았을까?','애초에 그 나이에 벤틀리를 샀을까?']}
+];
+const KEY='vj-dui-lyrics-v1';
+/* user data: {songId:[{sum,ly}]} — ly is the user's own entry */
+let store={};
+try{store=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){store={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+const songsData=()=>BASE.map(s=>({...s,items:(store[s.id]||s.m.map(x=>({sum:x,ly:''})))}));
+const NS='http://www.w3.org/2000/svg',svg=document.getElementById('g'),vp=document.getElementById('vp'),LG=document.getElementById('links'),NG=document.getElementById('nodes');
+const years=[...new Set(BASE.map(s=>s.d.slice(0,4)))].sort();
+const pal=['#7c8190','#9aa7c7','#93c5fd','#7dd3c0','#a3e3a0','#e6d38a','#f2a97f','#f08aa8','#c4a5ff','#a78bfa'];
+const col=y=>pal[Math.round(years.indexOf(y)/Math.max(1,years.length-1)*(pal.length-1))];
+document.getElementById('legend').innerHTML=years.map(y=>`<span><i style="background:${col(y)}"></i>${y}</span>`).join('');
+const mk=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const yurl=s=>'https://www.youtube.com/watch?v='+s.y;
+let S=[],nodes=[],links=[],hot=null,view={x:0,y:0,k:1},editing=false,sel=null,AW=0,AH=0;
+const shown=it=>(it.ly&&it.ly.trim())?it.ly.trim():it.sum;
+function setLines(t,txt){t.textContent='';const ls=txt.split(/\n/).filter(x=>x.trim()).slice(0,3);ls.forEach((l,i)=>{const sp=mk('tspan',{x:0,dy:i?'1.25em':0},t);sp.textContent=l})}
+function build(keep){
+ const prev=new Map(nodes.map(n=>[n.key,n]));
+ S=songsData().sort((p,q)=>p.d.localeCompare(q.d));
+ LG.textContent='';NG.textContent='';nodes=[];links=[];hot=null;svg.classList.remove('focus');
+ S.forEach((s,i)=>{
+  const sn={k:'song',s,key:s.id};nodes.push(sn);s.n=sn;
+  s.items.forEach((it,j)=>{const mn={k:'ment',s,it,j,key:s.id+':'+j};nodes.push(mn);links.push({a:sn,b:mn,L:52})});
+  if(i>0)links.push({a:S[i-1].n,b:sn,L:90,chain:1});
+ });
+ links.forEach(l=>{l.el=mk('line',{class:'link'+(l.chain?' chain':'')},LG)});
+ nodes.forEach(n=>{
+  const a=mk('a',{href:yurl(n.s),target:'_blank',rel:'noopener'},NG);const g=mk('g',{class:'node '+n.k},a);n.a=a;n.el=g;
+  const c=col(n.s.d.slice(0,4));
+  if(n.k==='song'){mk('circle',{r:6,fill:c},g);const t=mk('text',{x:10,y:4},g);t.textContent=n.s.t.split(' (')[0];a.setAttribute('aria-label',`${n.s.t}, ${n.s.d}. 유튜브 열기`)}
+  else{mk('circle',{r:3,fill:c},g);n.lab=mk('g',{},g);n.bg=mk('rect',{class:'bg',rx:6},n.lab);n.t=mk('text',{class:'t','text-anchor':'middle'},n.lab);n.sub=mk('text',{class:'sub','text-anchor':'middle'},n.lab);n.sub.textContent=`- ${n.s.t} (『${n.s.a}』), ${n.s.d}`;fillMent(n)}
+  bindNode(n);
+ });
+ measure();
+ const W=svg.clientWidth,H=svg.clientHeight;AW=Math.max(W,1100);AH=Math.max(H,680);
+ const T=W<700?118:100,B=64,L0=20,R0=AW-20,songs=nodes.filter(n=>n.k==='song');
+ songs.forEach((sn,i)=>{const p=keep&&prev.get(sn.key);sn.x=p?p.x:L0+90+(R0-L0-300)*i/Math.max(1,songs.length-1);sn.y=p?p.y:T+(AH-T-B)*(0.5+0.33*Math.sin(i*1.7));sn.vx=sn.vy=0});
+ nodes.filter(n=>n.k==='ment').forEach(mn=>{const p=keep&&prev.get(mn.key),sn=mn.s.n;mn.x=p?p.x:sn.x+Math.cos(mn.j*2.3+1)*70;mn.y=p?p.y:sn.y+Math.sin(mn.j*2.3+1)*70;mn.vx=mn.vy=0});
+ layout(keep?260:620,T,B,L0,R0);fit();
+ const lc=nodes.filter(n=>n.k==='ment').length,lf=nodes.filter(n=>n.k==='ment'&&n.it.ly&&n.it.ly.trim()).length;
+ document.getElementById('meta').textContent=`${S.length}곡 · 언급 대목 ${lc}개 · 가사 입력 ${lf}/${lc} · 멜론 등록 가사 기준, 2026년 11월 조사`;
+}
+function fillMent(n){const txt=shown(n.it);setLines(n.t,txt);const lines=n.t.childNodes.length;n.t.setAttribute('y',-8-(lines-1)*12.5);n.el.classList.toggle('lyric',!!(n.it.ly&&n.it.ly.trim()));n.a.setAttribute('aria-label',`${txt.replace(/\n/g,' ')}. ${n.s.t}, ${n.s.d}. 유튜브 열기`)}
+function measure(){nodes.forEach(n=>{n.el.setAttribute('transform','translate(0,0)');const b=(n.k==='song'?n.el.querySelector('text'):n.t).getBBox();if(n.k==='song'){n.bx0=-8;n.bx1=12+b.width;n.by0=-9;n.by1=9}else{n.bx0=-b.width/2;n.bx1=b.width/2;n.by0=b.y-3;n.by1=5}})}
+function layout(steps,T,B,L0,R0){let alpha=1;for(let s=0;s<steps;s++){alpha=Math.max(0.2,1-s/steps);
+ for(let i=0;i<nodes.length;i++){const p=nodes[i];for(let j=i+1;j<nodes.length;j++){const q=nodes[j];const dx=q.x-p.x,dy=q.y-p.y,d2=dx*dx+dy*dy||1,d=Math.sqrt(d2),f=300/d2;p.vx-=dx/d*f;p.vy-=dy/d*f;q.vx+=dx/d*f;q.vy+=dy/d*f;
+  const ox=Math.min(p.x+p.bx1,q.x+q.bx1)-Math.max(p.x+p.bx0,q.x+q.bx0)+6,oy=Math.min(p.y+p.by1,q.y+q.by1)-Math.max(p.y+p.by0,q.y+q.by0)+4;
+  if(ox>0&&oy>0){if(ox<oy*2.5){const m=((q.x+(q.bx0+q.bx1)/2)<(p.x+(p.bx0+p.bx1)/2)?-1:1)*ox*0.3;p.x-=m;q.x+=m}else{const m=(q.y<p.y?-1:1)*oy*0.4;p.y-=m;q.y+=m}}}}
+ links.forEach(l=>{const dx=l.b.x-l.a.x,dy=l.b.y-l.a.y,d=Math.hypot(dx,dy)||1,k=(d-l.L)/d*(l.chain?0.015:0.05);l.a.vx+=dx*k;l.a.vy+=dy*k;l.b.vx-=dx*k;l.b.vy-=dy*k});
+ nodes.forEach(n=>{n.x+=n.vx*alpha;n.y+=n.vy*alpha;n.vx*=0.6;n.vy*=0.6;n.x=Math.min(R0-n.bx1,Math.max(L0-n.bx0,n.x));n.y=Math.min(AH-B-n.by1,Math.max(T-n.by0,n.y))});}}
+function draw(){links.forEach(l=>{l.el.setAttribute('x1',l.a.x);l.el.setAttribute('y1',l.a.y);l.el.setAttribute('x2',l.b.x);l.el.setAttribute('y2',l.b.y)});
+ const z=Math.max(1,1/view.k);nodes.forEach(n=>n.el.setAttribute('transform',`translate(${n.x},${n.y})`+(n===hot&&z>1?` scale(${z})`:'')))}
+const apply=()=>{vp.setAttribute('transform',`translate(${view.x},${view.y}) scale(${view.k})`);draw()};
+function fit(){const W=svg.clientWidth,H=svg.clientHeight,k=Math.min(1,W/AW,H/AH);view={k,x:(W-AW*k)/2,y:(H-AH*k)/2};apply()}
+/* focus & hover */
+function focus(n){if(hot===n)return;unfocus();hot=n;svg.classList.add('focus');n.el.classList.add('on','hot');
+ if(n.k==='song'){links.forEach(l=>{if(l.a===n&&!l.chain){l.b.el.classList.add('on');l.el.classList.add('on')}})}else{n.s.n.el.classList.add('on');links.forEach(l=>{if(l.b===n)l.el.classList.add('on')})}
+ NG.appendChild(n.a);draw();
+ if(n.k==='ment'){const lines=n.t.childNodes.length;n.t.setAttribute('y',-14-(lines-1)*22);n.sub.setAttribute('y',16);const b1=n.t.getBBox(),b2=n.sub.getBBox(),x=Math.min(b1.x,b2.x)-12,w=Math.max(b1.width,b2.width)+24;n.bg.setAttribute('x',x);n.bg.setAttribute('y',b1.y-8);n.bg.setAttribute('width',w);n.bg.setAttribute('height',b2.y+b2.height-b1.y+16);n.lab.setAttribute('transform','');const r=n.bg.getBoundingClientRect(),W=innerWidth,s=r.width/w;let dx=0,dy=0;if(r.left<8)dx=8-r.left;else if(r.right>W-8)dx=W-8-r.right;if(r.top<8)dy=8-r.top;if(dx||dy)n.lab.setAttribute('transform',`translate(${dx/s},${dy/s})`)}}
+function unfocus(){if(!hot)return;const n=hot;svg.classList.remove('focus');document.querySelectorAll('.on,.hot').forEach(e=>e.classList.remove('on','hot'));if(n.k==='ment'){const lines=n.t.childNodes.length;n.t.setAttribute('y',-8-(lines-1)*12.5);n.lab.setAttribute('transform','')}hot=null;draw()}
+let dragN=null,pan=null,moved=0,lastType='mouse';
+function bindNode(n){n.a.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'&&!pan)focus(n)});n.a.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!dragN)unfocus()});n.a.addEventListener('focus',()=>focus(n));n.a.addEventListener('blur',()=>{if(!editing)unfocus()})}
+svg.addEventListener('pointerdown',e=>{lastType=e.pointerType;moved=0;const a=e.target.closest('a'),n=a&&nodes.find(x=>x.a===a);svg.classList.add('drag');if(n)dragN=n;else{pan={x:e.clientX-view.x,y:e.clientY-view.y};try{svg.setPointerCapture(e.pointerId)}catch(_){}}});
+svg.addEventListener('pointermove',e=>{if(!dragN&&!pan)return;moved+=Math.abs(e.movementX)+Math.abs(e.movementY);if(dragN&&moved>6){const r=svg.getBoundingClientRect();dragN.x=(e.clientX-r.left-view.x)/view.k;dragN.y=(e.clientY-r.top-view.y)/view.k;draw()}else if(pan){view.x=e.clientX-pan.x;view.y=e.clientY-pan.y;apply()}});
+const up=()=>{dragN=null;pan=null;svg.classList.remove('drag')};svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+svg.addEventListener('click',e=>{const a=e.target.closest('a');if(!a){if(lastType!=='mouse')unfocus();return}const n=nodes.find(x=>x.a===a);
+ if(moved>6){e.preventDefault();return}
+ if(editing){e.preventDefault();openPanel(n);return}
+ if(lastType!=='mouse'&&hot!==n){e.preventDefault();focus(n)}},true);
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect(),cx=e.clientX-r.left,cy=e.clientY-r.top,k2=Math.min(4,Math.max(0.2,view.k*Math.exp(-e.deltaY*0.0015)));view.x=cx-(cx-view.x)*k2/view.k;view.y=cy-(cy-view.y)*k2/view.k;view.k=k2;apply()},{passive:false});
+/* edit mode */
+const $=id=>document.getElementById(id),panel=$('panel');
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),1600)};
+$('editBtn').addEventListener('click',()=>{editing=!editing;document.body.classList.toggle('edit',editing);$('editBtn').classList.toggle('on',editing);$('editBtn').setAttribute('aria-pressed',editing);$('editBtn').textContent=editing?'입력 모드 끄기':'가사 입력 모드';if(!editing)closePanel();toast(editing?'대목이나 곡 노드를 클릭해 가사를 입력하세요':'보기 모드')});
+const items=s=>store[s.id]||(store[s.id]=s.items.map(x=>({...x})));
+function openPanel(n){sel=n;panel.classList.add('open');$('pTitle').textContent=n.s.t;$('pMeta').textContent=`『${n.s.a}』 · ${n.s.d}`;
+ const isM=n.k==='ment';$('pMent').style.display=isM?'':'none';$('pSave').style.display=isM?'':'none';$('pDel').style.display=isM?'':'none';
+ if(isM){$('pSum').textContent=n.it.sum||'(직접 추가한 대목)';$('pText').value=n.it.ly||'';setTimeout(()=>$('pText').focus(),0)}}
+function closePanel(){panel.classList.remove('open');sel=null}
+$('pClose').addEventListener('click',closePanel);
+$('pSave').addEventListener('click',()=>{if(!sel||sel.k!=='ment')return;const arr=items(sel.s);arr[sel.j].ly=$('pText').value.trim();save();const key=sel.key;build(true);toast('저장했습니다');const n=nodes.find(x=>x.key===key);n&&openPanel(n)});
+$('pText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();$('pSave').click()}});
+$('pAdd').addEventListener('click',()=>{if(!sel)return;const arr=items(sel.s);arr.push({sum:'',ly:''});save();const key=sel.s.id+':'+(arr.length-1);build(true);const n=nodes.find(x=>x.key===key);n&&openPanel(n);toast('대목을 추가했습니다')});
+$('pDel').addEventListener('click',()=>{if(!sel||sel.k!=='ment')return;const arr=items(sel.s);if(arr.length<=1){toast('곡마다 대목이 하나는 있어야 합니다');return}arr.splice(sel.j,1);save();closePanel();build(true);toast('삭제했습니다')});
+/* export/import */
+const io=$('io');
+$('ioBtn').addEventListener('click',()=>{$('ioText').value=JSON.stringify(store,null,1);io.classList.add('open')});
+$('ioClose').addEventListener('click',()=>io.classList.remove('open'));
+$('ioCopy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('ioText').value);toast('복사했습니다')}catch(e){$('ioText').select();toast('텍스트를 선택했습니다. 직접 복사하세요')}});
+$('ioLoad').addEventListener('click',()=>{try{const v=JSON.parse($('ioText').value||'{}');if(typeof v!=='object'||Array.isArray(v))throw 0;store=v;save();io.classList.remove('open');build(false);toast('가져왔습니다')}catch(e){toast('형식이 올바르지 않습니다')}});
+$('ioReset').addEventListener('click',()=>{if($('ioReset').dataset.c!=='1'){$('ioReset').dataset.c='1';$('ioReset').textContent='한 번 더 누르면 초기화';return}$('ioReset').dataset.c='';$('ioReset').textContent='입력 내용 초기화';store={};save();io.classList.remove('open');build(false);toast('초기화했습니다')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePanel();io.classList.remove('open')}});
+$('fit').addEventListener('click',fit);
+let rt;const ro=new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(()=>build(false),200)});
+const start=()=>{build(false);ro.observe(svg)};
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(start,start);
+}
+</script>
+</body>
+</html>
