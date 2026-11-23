@@ -52,8 +52,8 @@ window.VJ_DATA=[
    {sum:'그 운전자와 나는 같은 죄, 다른 건 피해자의 유무뿐이라는 성찰', ly:'그 차주는 대략 3년 전 같은 죄를 저지른 자 아마 유일하게 다른 점 피해자의 유무쯤일까'}
   ]},
  {id:'chaser',t:'The Chase Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'g57ayuJqonc',m:[
-   {sum:'모든 음주운전자는 잠재적 가해자, 다시 한번 되새김', ly:''},
-   {sum:'반성문이자 스스로에 대한 현실 점검, 다시 한번 반성', ly:''}
+   {sum:'모든 음주운전자는 잠재적 가해자, 다시 한번 되새김', ly:'모든 음주 운전자는 잠재적 가해자 물론 그때의 나도 포함해'},
+   {sum:'반성문이자 스스로에 대한 현실 점검, 다시 한번 반성', ly:'다시 한번 더 반성 reality check 그 약속 후 3년 다시 한번 더 반성'}
   ]},
  {id:'tofr',t:'True Or False Revisited',a:'The Chase Revisited',d:'2019.06.16',y:'3ORNUry34VU',m:[
    {sum:'맥주 마신 상태를 잊고 운전대를 잡은 그날을 다시 서술', ly:''}
