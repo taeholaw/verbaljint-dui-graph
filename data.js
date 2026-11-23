@@ -67,7 +67,7 @@ window.VJ_DATA=[
    {sum:'다시는 술 마시고 운전하지 않는다', ly:'TMI i never drink and drive again'}
   ]},
  {id:'gongin',t:'공인 (feat. 스윙스 & 한요한)',a:'변곡점',d:'2021.04.06',y:'35nOTibr4vM',m:[
-   {sum:'몇 년 전 음주로 추적 60분에 나오고도 자숙 없이 나왔다는 세간의 말', ly:''}
+   {sum:'몇 년 전 음주로 추적 60분에 나오고도 자숙 없이 나왔다는 세간의 말', ly:'몇년전 음주해갖구 추적60분 나오고 자숙 따위는 없이 기어나왔대 칵투 칵투'}
   ]},
  {id:'ahop',t:'아홉수',a:'변곡점',d:'2021.04.06',y:'4RVfsrGJSTY',m:[
    {sum:'카메라가 쫓아오듯 전부 방송된 DUI 사건', ly:'on TV i shed tears and DUI 사건 everything on air like the cameras chasin me'}
