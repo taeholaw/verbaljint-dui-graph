@@ -19,17 +19,17 @@ window.VJ_DATA=[
    {sum:'이 곡 자체가 반성문이라는 규정', ly:'이건 반성문이자 reality check'}
   ]},
  {id:'tof',t:'진실게임 (True or False)',a:'추적 (The Chase) / 진실게임 (True or False)',d:'2016.07.29',y:'8X2ER6R351c',m:[
-   {sum:'맥주 마신 상태를 잊고 운전대를 잡았다는 경위', ly:'한참을 멍 때린 다음에 운전대를 잡았네 맥주가 들어간 내 상태를 망각한 채 that's true'},
-   {sum:'단속 불빛을 보고 당황해 차를 돌렸다는 장면', ly:'겨우 세 캔인데 아직 안 취했어 that's false 저기 보이는 푸르고 붉은 빛 당황을 해 차를 돌렸네'},
+   {sum:'맥주 마신 상태를 잊고 운전대를 잡았다는 경위', ly:'한참을 멍 때린 다음에 운전대를 잡았네 맥주가 들어간 내 상태를 망각한 채 that`s true'},
+   {sum:'단속 불빛을 보고 당황해 차를 돌렸다는 장면', ly:'겨우 세 캔인데 아직 안 취했어 that`s false 저기 보이는 푸르고 붉은 빛 당황을 해 차를 돌렸네'},
    {sum:'술로 생기는 일을 조심하라던 경고를 되새김', ly:'every night I think about the people that I could have killed could have killed'},
-   {sum:'지난 몇 년을 반성하며 돌아봤다는 고백', ly:'지난 몇 년을 반성하고 돌아보았다 that's all'},
+   {sum:'지난 몇 년을 반성하며 돌아봤다는 고백', ly:'지난 몇 년을 반성하고 돌아보았다 that`s all'},
   ]},
  {id:'iwk',t:'그것이알고싶다 (Feat. Car, the garden)',a:'그것이알고싶다',d:'2017.01.10',y:'KQHUWurCQbo',m:[
    {sum:'다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유', ly:''}
   ]},
  {id:'award',t:'상을 받아야 돼 (한해·HENNEY, Feat. 버벌진트)',a:'LIPSTICK ON MY 여기저기',d:'2017.03.01',y:'RxP01H5qje4',m:[
-   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF'EM REGULAR FOUR OF'EM EP'S ONE OF'EM CRIMINAL 반성하네 오늘 밤도'},
-   {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:'누군간 내게 묻네 그 얘긴 대체 계속 왜 음악에 넣냐고 다른 뜻은 없네 IT'S JUST A REMINDER FOR MYSELF'}
+   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF'EM REGULAR FOUR OF`EM EP`S ONE OF`EM CRIMINAL 반성하네 오늘 밤도'},
+   {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:'누군간 내게 묻네 그 얘긴 대체 계속 왜 음악에 넣냐고 다른 뜻은 없네 IT`S JUST A REMINDER FOR MYSELF'}
   ]},
  {id:'pistol',t:'Pistol Bae (리코, Feat. Verbal Jint, SLEEQ)',a:'Panorama',d:'2017.09.29',y:'kTDQBsRXnic',m:[
    {sum:'새 차로 고속도로를 달려도 맨정신, 작년의 죄는 다시 없을 일', ly:''}
