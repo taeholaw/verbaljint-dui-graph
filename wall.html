@@ -68,13 +68,14 @@ D.forEach((s,i)=>{const c=col(s.d.slice(0,4));
   html+=`<span class="m ${j%2?'g':'w'}" data-s="${i}" data-j="${j}" tabindex="0" role="button">${esc(txt)}</span> `})});
 wall.innerHTML=html;
 function lastFill(){const r=document.createRange();r.selectNodeContents(wall);const rs=[...r.getClientRects()].filter(x=>x.width>0);if(!rs.length)return 1;const b=Math.max(...rs.map(x=>x.bottom));const line=rs.filter(x=>x.bottom>b-3);const wr=wall.getBoundingClientRect();return (Math.max(...line.map(x=>x.right))-Math.min(...line.map(x=>x.left)))/(wr.width-20)}
-function fit(){wall.classList.remove('scroll');wall.style.lineHeight='1.05';const H=wall.clientHeight;
+function fit(){wall.classList.remove('scroll');wall.style.textAlignLast='left';wall.style.lineHeight='1.0';const H=wall.clientHeight;
  let lo=4,hi=120;for(let i=0;i<20;i++){const m=(lo+hi)/2;wall.style.fontSize=m+'px';if(wall.scrollHeight<=H)lo=m;else hi=m}
  if(lo<7){wall.style.fontSize='7px';wall.classList.add('scroll');return}
  /* among sizes just under the maximum, take the one whose last line runs furthest to the right */
- let best=lo,bf=-1;for(let f=lo;f>lo*0.88;f-=lo*0.002){wall.style.fontSize=f+'px';if(wall.scrollHeight>H)continue;const q=lastFill();if(q>bf){bf=q;best=f}if(q>0.97)break}
- wall.style.fontSize=best+'px';
- let a=1.05,b=1.6;for(let i=0;i<16;i++){const m=(a+b)/2;wall.style.lineHeight=m;if(wall.scrollHeight<=H)a=m;else b=m}wall.style.lineHeight=a}
+ /* keep the leading tight: only look a little below the maximum size for a better-filled last line */
+ let best=lo,bf=-1;for(let f=lo;f>lo*0.975;f-=lo*0.0005){wall.style.fontSize=f+'px';if(wall.scrollHeight>H)continue;const q=lastFill();if(q>bf){bf=q;best=f}if(q>0.985)break}
+ wall.style.fontSize=best+'px';wall.style.textAlignLast=bf>0.75?'justify':'left';
+ let a=1.0,b=1.25;for(let i=0;i<16;i++){const m=(a+b)/2;wall.style.lineHeight=m;if(wall.scrollHeight<=H)a=m;else b=m}wall.style.lineHeight=a}
 /* detail card: hover or click shows it; the card itself is the YouTube link */
 let cur=null,pinned=false,ht=0;const W=x=>x.closest&&x.closest('#wall [role=button]');
 function show(a){clearTimeout(ht);const s=D[+a.dataset.s];if(!s)return;cur=a;wall.classList.add('dim');wall.querySelectorAll('.on,.sib').forEach(x=>x.classList.remove('on','sib'));const same=a.classList.contains('ti')?`.ti[data-s="${a.dataset.s}"]`:`.m[data-s="${a.dataset.s}"][data-j="${a.dataset.j}"]`;wall.querySelectorAll(`[data-s="${a.dataset.s}"]`).forEach(x=>x.classList.add('sib'));wall.querySelectorAll(same).forEach(x=>{x.classList.remove('sib');x.classList.add('on')});
