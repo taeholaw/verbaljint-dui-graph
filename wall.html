@@ -16,14 +16,12 @@
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden}
-#wall{position:fixed;left:0;right:0;top:0;bottom:44px;padding:10px 12px 4px;overflow:hidden;text-align:justify;text-align-last:left;word-break:keep-all;line-height:1.02;letter-spacing:-.02em}
+#wall{position:fixed;left:0;right:0;top:0;bottom:44px;padding:6px 10px 0;overflow:hidden;text-align:justify;text-align-last:left;word-break:keep-all;line-height:.98;letter-spacing:-.03em;color:var(--ink)}
 #wall.scroll{overflow-y:auto;text-align-last:auto}
 #wall [role=button]{color:inherit;text-decoration:none;transition:opacity .25s,color .25s}
 .ti{font-weight:900;text-transform:uppercase;letter-spacing:-.04em}
-.m{font-weight:300}
-.m.b{font-weight:500}
-.m.ly{font-weight:500}
-.sep{opacity:.35;font-weight:300}
+.m{color:#ececf0;word-break:break-all}.w3{font-weight:300}.w5{font-weight:500}.w9{font-weight:900}
+.sep{color:#55555e;font-weight:300}
 #wall.dim [role=button]{opacity:.16}
 #wall.dim .on{opacity:1;color:#fff}
 #wall.dim .sib{opacity:.6}
@@ -61,20 +59,29 @@ const ramp=['#ff3b30','#ff6a2b','#ff9f1c','#ffd23f','#e9e9ee','#b8f2e6','#7ad3ff
 const col=y=>ramp[Math.round(years.indexOf(y)/Math.max(1,years.length-1)*(ramp.length-1))];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const norm=x=>typeof x==='string'?{sum:x,ly:''}:{sum:x.sum||'',ly:x.ly||''};
-let html='',k=0;
+/* seeded random so the wall looks the same on every visit */
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+let html='';
 D.forEach((s,si)=>{
- const c=col(s.d.slice(0,4)),url='https://www.youtube.com/watch?v='+s.y,name=s.t.split(' (')[0],big=1+Math.min(s.m.length,5)*0.12;
- html+=`<span class="ti" data-s="${si}" tabindex="0" role="button" style="color:${c};font-size:${(1.9*big).toFixed(2)}em">${esc(name)}</span> `;
+ const c=col(s.d.slice(0,4)),name=s.t.split(' (')[0];
+ html+=`<span class="ti" data-s="${si}" tabindex="0" role="button" style="color:${c};font-size:${(2.3+rnd()*1.3).toFixed(2)}em">${esc(name)}</span> `;
  s.m.map(norm).forEach((it,j)=>{
-  const txt=(it.ly&&it.ly.trim())?it.ly.trim():it.sum,isLy=!!(it.ly&&it.ly.trim());
-  const size=[1,1.35,0.9,1.6,1.1][(k++)%5]*(isLy?1.1:1);
-  html+=`<span class="m${k%3===0?' b':''}${isLy?' ly':''}" data-s="${si}" data-j="${j}" tabindex="0" role="button" style="font-size:${size.toFixed(2)}em;color:${j%2?c:'var(--ink)'}">${esc(txt.replace(/\n+/g,' / '))}</span><span class="sep"> · </span>`;
+  const txt=(it.ly&&it.ly.trim())?it.ly.trim():it.sum;
+  const size=0.75+Math.pow(rnd(),1.6)*1.9; /* 0.75em ~ 2.65em, small sizes more common */
+  const w=size>1.9?pick(['w5','w9']):size<1.05?pick(['w3','w5']):pick(['w3','w5','w9']);
+  html+=`<span class="m ${w}" data-s="${si}" data-j="${j}" tabindex="0" role="button" style="font-size:${size.toFixed(2)}em">${esc(txt.replace(/\n+/g,' / '))}</span><span class="sep"> / </span>`;
  });
 });
-wall.innerHTML=html;
-/* fit: largest base size where the wall still fits the screen */
-function fit(){wall.classList.remove('scroll');let lo=4,hi=80;for(let i=0;i<18;i++){const mid=(lo+hi)/2;wall.style.fontSize=mid+'px';if(wall.scrollHeight<=wall.clientHeight)lo=mid;else hi=mid}
- const min=innerWidth<700?9:7;if(lo<min){wall.style.fontSize=min+'px';wall.classList.add('scroll')}else wall.style.fontSize=lo+'px'}
+wall.innerHTML=html.replace(/<span class="sep"> \/ <\/span>$/,'');
+/* fit: biggest type that fits, with a well-filled last line, then stretch leading to close the bottom gap */
+function fit(){wall.classList.remove('scroll');wall.style.lineHeight='.98';const last=wall.querySelector('.m:last-of-type')||[...wall.querySelectorAll('.m')].pop();if(last)last.style.fontSize=last.dataset.fs||(last.dataset.fs=last.style.fontSize);
+ let lo=3,hi=90;for(let i=0;i<18;i++){const mid=(lo+hi)/2;wall.style.fontSize=mid+'px';if(wall.scrollHeight<=wall.clientHeight)lo=mid;else hi=mid}
+ const min=innerWidth<700?6:6;if(lo<min){wall.style.fontSize=min+'px';wall.classList.add('scroll');return}
+ wall.style.fontSize=lo+'px';
+ /* grow the final phrase until it reaches the right edge, so the last line has no hole */
+ if(last){const wr=wall.getBoundingClientRect(),edge=wr.right-10;let a=parseFloat(last.dataset.fs),b=a*6;for(let i=0;i<16;i++){const m=(a+b)/2;last.style.fontSize=m+'em';const rs=last.getClientRects(),r=rs[rs.length-1];if(wall.scrollHeight<=wall.clientHeight&&rs.length===1&&r.right<=edge+1)a=m;else b=m}last.style.fontSize=a+'em'}
+ let a=0.98,b=1.8;for(let i=0;i<14;i++){const m=(a+b)/2;wall.style.lineHeight=m;if(wall.scrollHeight<=wall.clientHeight)a=m;else b=m}wall.style.lineHeight=a}
 /* detail card: hover or click shows it; the card itself is the YouTube link */
 let cur=null,pinned=false,ht=0;const W=x=>x.closest&&x.closest('#wall [role=button]');
 function show(a){clearTimeout(ht);const s=D[+a.dataset.s];if(!s)return;cur=a;wall.classList.add('dim');wall.querySelectorAll('.on,.sib').forEach(x=>x.classList.remove('on','sib'));a.classList.add('on');wall.querySelectorAll(`[data-s="${a.dataset.s}"]`).forEach(x=>{if(x!==a)x.classList.add('sib')});
