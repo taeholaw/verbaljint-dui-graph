@@ -12,11 +12,11 @@
 */
 window.VJ_DATA=[
  {id:'chase',t:'추적 (The Chase)',a:'추적 (The Chase) / 진실게임 (True or False)',d:'2016.07.29',y:'8TufDiAOADI',m:[
-   {sum:'6월 그날 밤 사건을 반성하고 있으니 걱정 말라는 다짐', ly:''},
-   {sum:'단속 장면이 TV에 그대로 남았다는 고백', ly:''},
-   {sum:'모든 음주운전자는 잠재적 가해자라는 자기 인식', ly:''},
-   {sum:'이제는 음주운전에 단호히 "노"라고 말한다는 선언', ly:''},
-   {sum:'이 곡 자체가 반성문이라는 규정', ly:''}
+   {sum:'6월 그날 밤 사건을 반성하고 있으니 걱정 말라는 다짐', ly:'6월의 그 밤 신석초 앞 사건은 반성하고 있으니 걱정마 다시는 일어나지 않을 일'},
+   {sum:'단속 장면이 TV에 그대로 남았다는 고백', ly:'TV에 남은 DUI(Driving Under the Influence) first time 까지 변한 게 없네'},
+   {sum:'모든 음주운전자는 잠재적 가해자라는 자기 인식', ly:'모든 음주운전자는 잠재적 가해자 물론 그때의 나도 포함해'},
+   {sum:'이제는 음주운전에 단호히 "노"라고 말한다는 선언', ly:'now I say no to drunk driving'},
+   {sum:'이 곡 자체가 반성문이라는 규정', ly:'이건 반성문이자 reality check'}
   ]},
  {id:'tof',t:'진실게임 (True or False)',a:'추적 (The Chase) / 진실게임 (True or False)',d:'2016.07.29',y:'8X2ER6R351c',m:[
    {sum:'맥주 마신 상태를 잊고 운전대를 잡았다는 경위', ly:''},
@@ -29,8 +29,8 @@ window.VJ_DATA=[
    {sum:'다시는 음주운전을 하지 않는 자신처럼 사람은 바뀐다는 비유', ly:''}
   ]},
  {id:'award',t:'상을 받아야 돼 (한해·HENNEY, Feat. 버벌진트)',a:'LIPSTICK ON MY 여기저기',d:'2017.03.01',y:'RxP01H5qje4',m:[
-   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:''},
-   {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:''}
+   {sum:'내 기록 중 하나는 범죄 기록, 오늘 밤도 반성한다', ly:'SIX OF'EM REGULAR FOUR OF'EM EP'S ONE OF'EM CRIMINAL 반성하네 오늘 밤도'},
+   {sum:'그 얘기를 왜 계속 음악에 넣냐는 물음에 "스스로를 위한 리마인더"', ly:'누군간 내게 묻네 그 얘긴 대체 계속 왜 음악에 넣냐고 다른 뜻은 없네 IT'S JUST A REMINDER FOR MYSELF'}
   ]},
  {id:'pistol',t:'Pistol Bae (리코, Feat. Verbal Jint, SLEEQ)',a:'Panorama',d:'2017.09.29',y:'kTDQBsRXnic',m:[
    {sum:'새 차로 고속도로를 달려도 맨정신, 작년의 죄는 다시 없을 일', ly:''}
